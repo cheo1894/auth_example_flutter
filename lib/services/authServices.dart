@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class Authservices with Servicesmixin {
   Future createUser(
@@ -104,6 +105,25 @@ class Authservices with Servicesmixin {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future signWithApple(BuildContext context) async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+          scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName]);
+
+      final oAuthCredential = OAuthProvider("apple.com").credential(
+          idToken: appleCredential.identityToken, accessToken: appleCredential.authorizationCode);
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(oAuthCredential);
+    } catch (e) {
+      print('Error with Apple sign in: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: MyText(
+        text: 'Error with Apple sign in: $e',
+      )));
     }
   }
 

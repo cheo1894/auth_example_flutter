@@ -1,3 +1,4 @@
+import 'package:auth_flutter_example/models/userModel.dart';
 import 'package:auth_flutter_example/screens/authScreen/authScreenMixin.dart';
 import 'package:auth_flutter_example/services/authServices.dart';
 import 'package:auth_flutter_example/widgets/myDraggableScrollableSheet.dart';
@@ -55,23 +56,27 @@ class _AuthscreenState extends State<Authscreen> with AuthScreenMixin {
                           onPressed: () async {
                             await Authservices().signInWithGoogle().then(
                               (user) {
-                                Navigator.pushNamedAndRemoveUntil(context, '/home', (value) {
-                                  return false;
-                                }, arguments: user);
+                                if (user != null && user is UserModel) {
+                                  Navigator.pushNamedAndRemoveUntil(context, '/home', (value) {
+                                    return false;
+                                  }, arguments: user);
+                                }
                               },
                             );
                           },
                         ),
-                        loginButton(
-                          space: 10,
-                          title: 'Continue with Apple',
-                          onPressed: () {},
-                        ),
-                        loginButton(
-                          space: 10,
-                          title: 'Continue with Phone Number',
-                          onPressed: () {},
-                        ),
+                        // loginButton(
+                        //   space: 10,
+                        //   title: 'Continue with Apple',
+                        //   onPressed: () {
+                        //     Authservices().signWithApple(context);
+                        //   },
+                        // ),
+                        // loginButton(
+                        //   space: 10,
+                        //   title: 'Continue with Phone Number',
+                        //   onPressed: () {},
+                        // ),
                       ],
                     ),
                   ),
